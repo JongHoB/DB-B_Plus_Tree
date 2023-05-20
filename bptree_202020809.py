@@ -116,6 +116,7 @@ class B_PLUS_TREE:
 
         while leafnode.isLeaf == False:
             for idx, key in enumerate(leafnode.keys):
+                leftsibling = None
                 if idx > 0:
                     leftsibling = leafnode.subTrees[idx-1]
                 if idx < len(leafnode.subTrees)-1:
@@ -128,33 +129,40 @@ class B_PLUS_TREE:
                     indexnode = leafnode
                     indexnodeidx = idx
                 if idx == len(leafnode.keys)-1:
+                    leftsibling = leafnode.subTrees[idx]
+                    rightsibling = None
                     leafnode = leafnode.subTrees[idx+1]
 
         if k not in leafnode.values:
             return
         leafnode.values.remove(k)
         minimum = self.order//2
+
         if len(leafnode.values) < minimum:
             if leafnode.parent is None:
+
                 if len(leafnode.values) <= 0:
+
                     self.root = None
                 return
 
             if leftsibling is not None and len(leftsibling.values) > minimum:
+
                 borrowkey = leftsibling.values.pop()
                 leafnode.values.insert(0, borrowkey)
 
                 leafnode.parent.keys[parentidx if rightsibling is None else parentidx-1] = borrowkey
 
             elif rightsibling is not None and len(rightsibling.values) > minimum:
+
                 borrowkey = rightsibling.values.pop(0)
                 leafnode.values.append(borrowkey)
 
                 leafnode.parent.keys[parentidx] = rightsibling.values[0]
 
             elif leftsibling is not None:
-                leftsibling.values.extend(leafnode.values)
 
+                leftsibling.values.extend(leafnode.values)
                 leftsibling.nextNode = leafnode.nextNode
                 leafnode.parent.keys.pop(
                     parentidx if rightsibling is None else parentidx-1)
@@ -162,16 +170,30 @@ class B_PLUS_TREE:
                 leafnode.parent.subTrees.pop(
                     parentidx + 1 if rightsibling is None else parentidx)
                 leafnode = leftsibling
+                if not leafnode.parent.keys:
+
+                    self.root = leafnode
+                    self.root.isLeaf = True
+                    self.root.parent = None
+
             elif rightsibling is not None:
+
                 leafnode.values.extend(rightsibling.values)
                 leafnode.nextNode = rightsibling.nextNode
                 leafnode.parent.keys.pop(parentidx)
                 leafnode.parent.subTrees.pop(parentidx+1)
+                if not leafnode.parent.keys:
+
+                    self.root = leafnode
+                    self.root.isLeaf = True
+                    self.root.parent = None
             if indexnode is not None:
+
                 indexnode.keys[indexnodeidx] = leafnode.values[0]
             self.rebalance(leafnode.parent)
         else:
             if indexnode is not None:
+
                 indexnode.keys[indexnodeidx] = leafnode.values[0]
 
     def print_root(self):
@@ -267,20 +289,33 @@ class B_PLUS_TREE:
             print("NONE")
 
     def rebalance(self, node: Node):
+        if node is None:
+
+            return
         minimum = self.order//2
         if len(node.keys) < minimum:
+
             if node.parent is None:
+
                 if len(node.keys) <= 0:
+
                     self.root = None
                 return
 
             parent: Node = node.parent
+            nodeidx = parent.subTrees.index(node)
             parentidx = parent.subTrees.index(node)
-            leftsibling: Node = parent.subTrees[parentidx -
-                                                1] if parentidx > 0 else None
-            rightsibling: Node = parent.subTrees[parentidx +
-                                                 1] if parentidx < len(parent.subTrees)-1 else None
+            chk = 0
+            if parentidx > 0:
+                parentidx = parentidx-1
+                chk = 1
+            leftsibling: Node = parent.subTrees[nodeidx -
+                                                1] if nodeidx > 0 else None
+            rightsibling: Node = parent.subTrees[nodeidx +
+                                                 1] if nodeidx < len(parent.subTrees)-1 else None
+
             if leftsibling is not None and len(leftsibling.keys) > minimum:
+
                 tempkey = leftsibling.keys.pop()
                 borrowsubTree = leftsibling.subTrees.pop()
                 node.keys.insert(0, parent.keys[parentidx-1])
@@ -288,14 +323,15 @@ class B_PLUS_TREE:
                 borrowsubTree.parent = node
                 parent.keys[parentidx-1] = tempkey
             elif rightsibling is not None and len(rightsibling.keys) > minimum:
+
                 tempkey = rightsibling.keys.pop(0)
-                print(tempkey)
                 borrowsubTree = rightsibling.subTrees.pop(0)
                 node.keys.append(parent.keys[parentidx])
                 node.subTrees.append(borrowsubTree)
                 borrowsubTree.parent = node
-                parent.keys[parentidx] = rightsibling.keys[0]
+                parent.keys[parentidx] = tempkey
             elif leftsibling is not None:
+
                 leftsibling.keys.append(parent.keys[parentidx])
                 leftsibling.keys.extend(node.keys)
                 leftsibling.subTrees.extend(node.subTrees)
@@ -305,6 +341,7 @@ class B_PLUS_TREE:
                 parent.subTrees.pop(parentidx+1)
                 node = leftsibling
             elif rightsibling is not None:
+
                 node.keys.append(parent.keys[parentidx])
                 node.keys.extend(rightsibling.keys)
                 node.subTrees.extend(rightsibling.subTrees)
@@ -313,6 +350,7 @@ class B_PLUS_TREE:
                 parent.keys.pop(parentidx)
                 parent.subTrees.pop(parentidx+1)
             if not parent.keys:
+
                 node.parent = None
                 parent = node
                 self.root = node
