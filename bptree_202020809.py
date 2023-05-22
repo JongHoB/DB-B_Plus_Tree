@@ -1,10 +1,3 @@
-'''
-1. Replace folder name "202212345" with your student ID !!
-2. Also, replace this file name "bptree_202212345" with your student ID !
-3. Implement operations with "B_PLUS_TREE" class.
-4. Run the code "python bptree_202212345.py < test_bp.txt > result.txt" in terminal to test.
-'''
-
 import sys
 
 
