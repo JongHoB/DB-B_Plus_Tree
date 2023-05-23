@@ -180,8 +180,7 @@ class B_PLUS_TREE:
                     self.root = leafnode
                     self.root.isLeaf = True
                     self.root.parent = None
-            if indexnode is not None:
-
+            if indexnode is not None and indexnode.keys:
                 indexnode.keys[indexnodeidx] = leafnode.values[0]
             self.rebalance(leafnode.parent)
         else:
