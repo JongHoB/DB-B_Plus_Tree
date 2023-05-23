@@ -49,19 +49,21 @@ class B_PLUS_TREE:
             if leaf.parent and leafidx > 0:
                 beforenode = leaf.parent.subTrees[leafidx-1]
             mid = self.order//2
-            leftnode = Node()
-            leftnode.isLeaf = True
-            leftnode.values = leaf.values[:mid]
+
+            tempkey = leaf.values[mid]
 
             rightnode = Node()
             rightnode.isLeaf = True
-            rightnode.values = leaf.values[mid:]
+            rightnode.values.extend(leaf.values[mid:])
+
+            leaf.isLeaf = True
+            del leaf.values[mid:]
 
             if beforenode:
-                beforenode.nextNode = leftnode
-            leftnode.nextNode = rightnode
+                beforenode.nextNode = leaf
             rightnode.nextNode = leaf.nextNode
-            tempkey = leaf.values[mid]
+            leaf.nextNode = rightnode
+
             parent = leaf.parent
             if parent is None:
                 parent = Node()
@@ -70,9 +72,9 @@ class B_PLUS_TREE:
             parent.keys.append(tempkey)
             parent.keys.sort()
             tempkeyidx = parent.keys.index(tempkey)
-            leftnode.parent = parent
+            leaf.parent = parent
             rightnode.parent = parent
-            parent.subTrees.insert(tempkeyidx, leftnode)
+            parent.subTrees.insert(tempkeyidx, leaf)
             parent.subTrees.insert(tempkeyidx+1, rightnode)
 
             while len(parent.keys) >= self.order:
