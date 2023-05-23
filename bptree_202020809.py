@@ -44,6 +44,10 @@ class B_PLUS_TREE:
         leaf.values.append(k)
         leaf.values.sort()
         if len(leaf.values) >= self.order:
+            beforenode: Node = None
+            leafidx = leaf.parent.subTrees.index(leaf) if leaf.parent else None
+            if leaf.parent and leafidx > 0:
+                beforenode = leaf.parent.subTrees[leafidx-1]
             mid = self.order//2
             leftnode = Node()
             leftnode.isLeaf = True
@@ -53,6 +57,8 @@ class B_PLUS_TREE:
             rightnode.isLeaf = True
             rightnode.values = leaf.values[mid:]
 
+            if beforenode:
+                beforenode.nextNode = leftnode
             leftnode.nextNode = rightnode
             rightnode.nextNode = leaf.nextNode
             tempkey = leaf.values[mid]
@@ -242,7 +248,7 @@ class B_PLUS_TREE:
                     next = idx+1
             leaf = leaf.subTrees[next]
         l = ""
-        while leaf.values:
+        while leaf and leaf.values:
             chk = 0
             for v in leaf.values:
                 if v >= k_from and v <= k_to:
