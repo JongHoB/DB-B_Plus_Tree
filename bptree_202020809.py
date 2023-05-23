@@ -165,11 +165,10 @@ class B_PLUS_TREE:
                 leftsibling.nextNode = leafnode.nextNode
                 leafnode.parent.keys.pop(
                     parentidx if rightsibling is None else parentidx-1)
-
                 leafnode.parent.subTrees.pop(
                     parentidx + 1 if rightsibling is None else parentidx)
                 leafnode = leftsibling
-                if not leafnode.parent.keys:
+                if not leafnode.parent.keys and not leafnode.parent.parent:
 
                     self.root = leafnode
                     self.root.isLeaf = True
@@ -181,7 +180,7 @@ class B_PLUS_TREE:
                 leafnode.nextNode = rightsibling.nextNode
                 leafnode.parent.keys.pop(parentidx)
                 leafnode.parent.subTrees.pop(parentidx+1)
-                if not leafnode.parent.keys:
+                if not leafnode.parent.keys and not leafnode.parent.parent:
 
                     self.root = leafnode
                     self.root.isLeaf = True
@@ -195,6 +194,8 @@ class B_PLUS_TREE:
                 indexnode.keys[indexnodeidx] = leafnode.values[0]
 
     def print_root(self):
+        if not self.root or (self.root.isLeaf and not self.root.values) or (not self.root.isLeaf and not self.root.keys):
+            return
         l = "["
         if self.root.isLeaf == False:
             for k in self.root.keys:
@@ -238,6 +239,8 @@ class B_PLUS_TREE:
 
     def find_range(self, k_from, k_to):
         leaf = self.root
+        if not leaf or (leaf.isLeaf and not leaf.values) or (not leaf.isLeaf and not leaf.keys):
+            return
         while leaf.isLeaf == False:
             next = -1
             for idx, value in enumerate(leaf.keys):
@@ -265,6 +268,9 @@ class B_PLUS_TREE:
 
     def find(self, k):
         leaf = self.root
+        if not leaf or (leaf.isLeaf and not leaf.values) or (not leaf.isLeaf and not leaf.keys):
+            print("NONE")
+            return
         chk = 0
         l = ""
         while leaf.isLeaf == False:
