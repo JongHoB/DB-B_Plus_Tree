@@ -35,17 +35,9 @@ Implement a B+Tree with Python
 - `ROOT`
 - Print root of the tree
 
-ex)
-
-<img width="351" alt="image" src="https://github.com/JongHoB/DB-B_Plus_Tree/assets/78012131/10838eda-ffb9-4dfc-ab07-4cac12a3122d">
-
 ### 6. PRINT
 - `PRINT`
 - Print the tree (print nodes level by level from the root)
-
-ex)
-
-<img width="821" alt="image" src="https://github.com/JongHoB/DB-B_Plus_Tree/assets/78012131/e187e935-c628-4303-b487-e21b0559b3fb">
 
 ### 7. FIND
 - `FIND K`
@@ -53,18 +45,9 @@ ex)
 - Input: integer K
 - Output: paths or NONE (if K does not exist)
 
-ex)
-
-<img width="886" alt="image" src="https://github.com/JongHoB/DB-B_Plus_Tree/assets/78012131/c44e96b9-20a4-4085-b9bb-b1a8b9fca727">
-
 ### 8. RANGE
 - `RANGE K(from) K(to)`
 - Print all nodes in the range K(from) K(to)
-
-ex)
-
-<img width="861" alt="image" src="https://github.com/JongHoB/DB-B_Plus_Tree/assets/78012131/2c84a6a0-d273-4e98-bb6c-230c2cd990fd">
-
 
  ## Tips 
 - In this Project, every operation is based on this site. https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html
